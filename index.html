@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>LilCal</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const Calendar = () => {
+        const [currentDate, setCurrentDate] = React.useState(new Date());
+        const [clickedDay, setClickedDay] = React.useState(null);
+
+        const daysInMonth = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 1,
+          0
+        ).getDate();
+
+        const firstDayOfMonth = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          1
+        ).getDay();
+
+        const monthNames = [
+          'January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        const renderDays = () => {
+          const days = [];
+          
+          // Empty days
+          for (let i = 0; i < firstDayOfMonth; i++) {
+            days.push(<div key={`empty-${i}`} className="day empty"></div>);
+          }
+          
+          // Actual days
+          for (let day = 1; day <= daysInMonth; day++) {
+            const isToday = 
+              day === new Date().getDate() &&
+              currentDate.getMonth() === new Date().getMonth() &&
+              currentDate.getFullYear() === new Date().getFullYear();
+
+            const isSelected = day === clickedDay;
+              
+            days.push(
+              <div 
+                key={day}
+                onClick={() => setClickedDay(day)}
+                className={`day${isToday ? ' today' : ''}`}
+                style={{
+                  backgroundColor: isSelected ? '#007AFF' : undefined,
+                  color: isSelected ? 'white' : undefined
+                }}
+              >
+                {day}
+              </div>
+            );
+          }
+          
+          return days;
+        };
+
+        return (
+          <div className="calendar">
+            <div className="header">
+              <button onClick={() => {
+                setClickedDay(null);
+                setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() - 1)));
+              }}>◀</button>
+              <h2>{monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}</h2>
+              <button onClick={() => {
+                setClickedDay(null);
+                setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() + 1)));
+              }}>▶</button>
+            </div>
+            <div className="weekdays">
+              <div>Sun</div>
+              <div>Mon</div>
+              <div>Tue</div>
+              <div>Wed</div>
+              <div>Thu</div>
+              <div>Fri</div>
+              <div>Sat</div>
+            </div>
+            <div className="days">
+              {renderDays()}
+            </div>
+          </div>
+        );
+      };
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(
+        <React.StrictMode>
+          <Calendar />
+        </React.StrictMode>
+      );
+    </script>
+  </body>
+</html> 
