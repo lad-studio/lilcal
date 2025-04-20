@@ -34,7 +34,9 @@
       "buildResources": "assets"
     },
     "asar": true,
-    "compression": "maximum"
+    "compression": "maximum",
+    "removePackageScripts": true,
+    "removePackageKeywords": true
   },
   "dependencies": {
     "react": "^18.2.0",
